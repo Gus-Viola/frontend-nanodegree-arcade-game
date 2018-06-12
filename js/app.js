@@ -11,6 +11,9 @@ const Enemy = function() {
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
+    // this.x = this.x+1;
+    // return this.x;
+    return null;
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
@@ -29,7 +32,9 @@ Enemy.prototype.render = function() {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-
+let allEnemies = [];
+let enemyOne = new Enemy;
+allEnemies = [enemyOne];
 
 
 // This listens for key presses and sends the keys to your
