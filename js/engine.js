@@ -153,7 +153,7 @@ var Engine = (function(global) {  //Gus: the var Engine may die, as long as the 
             enemy.render();
         });
 
-        player.render(); //Gus: player not defined in this file. Is that ok?
+        player.render();
     }
 
     /* This function does nothing but it could have been a good place to
@@ -173,7 +173,8 @@ var Engine = (function(global) {  //Gus: the var Engine may die, as long as the 
         "images/water-block.png",
         "images/grass-block.png",
         "images/enemy-bug.png",
-        "images/char-boy.png"
+        "images/char-boy.png",
+        "images/char-cat-girl.png"
     ]);
     Resources.onReady(init);
 
