@@ -34,7 +34,7 @@ Enemy.prototype.render = function() {
 //let sprite; //attribute of Player class
 
 const Player = function() {
-  this.x = 200;
+  this.x = 200; //starting position
   this.y = 400;
   this.sprite = "images/char-cat-girl.png";
 };
@@ -43,14 +43,32 @@ const Player = function() {
 Player.prototype.update = function() {
   // console.log(this);
   return null;
-};
+};// end of Player update function
 
 Player.prototype.render = function() { //draws Player on screen
-  console.log(this.sprite);
+  // console.log(this.sprite);
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-Player.prototype.handleInput = function() { //handles the key inputs for Player movement
+Player.prototype.handleInput = function(direction) { //handles the key inputs for Player movement
+  switch(direction) {
+    case "left":
+        this.x-=5;
+        break;
+    case "right":
+        this.x+=5;
+        break;
+    case "up":
+        this.y-=5;
+        break;
+    case "down":
+        this.y+=5;
+        break;
+    default:
+      return null;
+}
+
+  console.log(direction);
   return null;
 };
 
@@ -62,16 +80,15 @@ let enemyOne = new Enemy;
 allEnemies = [enemyOne];
 let player = new Player;
 
-
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
-document.addEventListener("keyup", function(e) {
+//Changed event listener to keydown - player movement is much smoother
+document.addEventListener("keydown", function(e) {
   var allowedKeys = {
     37: "left",
     38: "up",
     39: "right",
     40: "down"
   };
-
-  Player.handleInput(allowedKeys[e.keyCode]);
+  player.handleInput(allowedKeys[e.keyCode]);
 });
