@@ -67,7 +67,10 @@ function checkBugCollision(ladybug) {
       }//end of else
     }//end of if ladybug > enemy
   }//end of for loop
-}//end of checkBugCollision
+  
+  return null;
+  
+}//end of checkBugCollision()
 
 
 // Now write your own Player class
@@ -86,8 +89,47 @@ const Player = function() {
 
 Player.prototype.update = function() {
   // console.log(this);
+  
+  checkPlayerCollision();
+  
+    if (this.x > 420) { //barrier to the right
+    this.x = 420; 
+  }
+    if (this.x < -17) { //barrier to the left
+    this.x = -17; 
+  }
+  
+    if (this.y > 445) { //barrier down
+    this.y = 445; 
+  }
+    if (this.y < -11) { //barrier up
+    this.y = -11; 
+  }//end of ifs that check player within canvas
+  
+
   return null;
 }; // end of Player update function
+
+function checkPlayerCollision() {
+	
+	  for (enemy of allEnemies) {
+
+    if (
+      player.y + 130 >= enemy.y + 90 &&  //131-90
+      player.x + 25 <= enemy.x + 90 &&   //25 - 88
+      player.y + 75 <= enemy.y + 135 && //73 - 135
+      player.x + 75 >= enemy.x + 10) { //76 - 11
+	  
+		player.x = 200; //back to starting position
+		player.y = 445;
+	  
+    }//end of if ladybug > enemy
+  }//end of for loop
+  
+  return null;
+	
+}//end of checkPlayerCollision()
+
 
 Player.prototype.render = function() { //draws Player on screen
   // console.log(this.sprite);
