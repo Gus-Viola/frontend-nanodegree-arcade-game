@@ -3,28 +3,72 @@
 // canvas.height = 606;
 
 const Enemy = function() {
-  // Variables applied to each of our instances go here,
-  // we've provided one for you to get started
-  this.x = 500;
-  this.y = 200;
-  // The image/sprite for our enemies, this uses
-  // a helper we've provided to easily load images
+  this.x = -100; //ladybugs are gentle creatures, they do not just pop up
+  this.y = 55; //is randomized upon instatiation from 55 to 350
+  this.yDelta = 0;
+  this.speed = 100; //is randomized upon instatiation from 100 to 200
   this.sprite = "images/enemy-bug.png";
 };
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
+
+  //function checkCollision checks ladybug vs enemies; nudges ensue
+  checkBugCollision(this);
+
+  if (this.y < 55) { //ladybugs must be between 55 and 350
+    this.y = 55;
+    this.yDelta = 10;
+  }
+
+  if (this.y > 350) { //ladybugs must be between 55 and 350
+    this.y = 350;
+    this.yDelta = -10;
+  }
+
+  if (this.x > 500) { //ladybug gently leaves the screen...
+    this.x = -100; //..then the ladybug gently enters the screen
+    // this.yDelta = 0; //interesting difficult setting
+  }
+
   // You should multiply any movement by the dt parameter
   // which will ensure the game runs at the same speed for
   // all computers.
-  this.x *= dt;
+  this.x += (this.speed * dt);
+  this.y = (this.y + (this.yDelta)/60); //bumps
+
 };
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
+
+function checkBugCollision(ladybug) {
+
+  for (enemy of allEnemies) {
+    if (ladybug == enemy) { //no changing yDelta if self
+      break;
+    }
+
+    if (
+      ladybug.y + 130 >= enemy.y + 90 &&  //131-90
+      ladybug.x + 25 <= enemy.x + 90 &&   //25 - 88
+      ladybug.y + 75 <= enemy.y + 135 && //73 - 135
+      ladybug.x + 75 >= enemy.x + 10) { //76 - 11
+
+      if (ladybug > enemy) {
+        ladybug.yDelta++;
+        enemy.yDelta--;
+      } else {
+        ladybug.yDelta--;
+        enemy.yDelta++;
+      }//end of else
+    }//end of if ladybug > enemy
+  }//end of for loop
+}//end of checkBugCollision
+
 
 // Now write your own Player class
 // This class requires an update(), render() and
@@ -35,7 +79,7 @@ Enemy.prototype.render = function() {
 
 const Player = function() {
   this.x = 200; //starting position
-  this.y = 400;
+  this.y = 445;
   this.sprite = "images/char-cat-girl.png";
 };
 
@@ -43,30 +87,31 @@ const Player = function() {
 Player.prototype.update = function() {
   // console.log(this);
   return null;
-};// end of Player update function
+}; // end of Player update function
 
 Player.prototype.render = function() { //draws Player on screen
   // console.log(this.sprite);
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+//How can player move diagonally?
 Player.prototype.handleInput = function(direction) { //handles the key inputs for Player movement
-  switch(direction) {
+  switch (direction) {
     case "left":
-        this.x-=5;
-        break;
+      this.x -= 8;
+      break;
     case "right":
-        this.x+=5;
-        break;
+      this.x += 8;
+      break;
     case "up":
-        this.y-=5;
-        break;
+      this.y -= 8;
+      break;
     case "down":
-        this.y+=5;
-        break;
+      this.y += 8;
+      break;
     default:
       return null;
-}
+  }
 
   console.log(direction);
   return null;
@@ -76,9 +121,19 @@ Player.prototype.handleInput = function(direction) { //handles the key inputs fo
 // Place all enemy objects in an array called allEnemies
 // Place the Player object in a variable called Player
 let allEnemies = [];
-let enemyOne = new Enemy;
-allEnemies = [enemyOne];
+
+for (i = 0; i < 5; i++) {
+  let enemyOne = new Enemy;
+  enemyOne.speed = ((Math.floor(Math.random() * 101)) + 100); //speed from 100 to 200
+  enemyOne.y = ((Math.floor(Math.random() * 296)) + 55); //351-55 = 296
+  allEnemies.push(enemyOne);
+}
+// let enemyOne = new Enemy;
+// enemyOne.speed = ((Math.floor(Math.random() * 101)) + 100); //speed from 100 to 200
+// enemyOne.y = ((Math.floor(Math.random() * 196)) + 55); //351-55 = 296
+
 let player = new Player;
+
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
