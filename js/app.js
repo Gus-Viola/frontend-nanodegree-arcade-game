@@ -57,6 +57,8 @@ function checkBugCollision(ladybug) {
       ladybug.x + 25 <= enemy.x + 90 &&   //25 - 88
       ladybug.y + 75 <= enemy.y + 135 && //73 - 135
       ladybug.x + 75 >= enemy.x + 10) { //76 - 11
+	  
+	  if (soundOn) {	  bugCollisionSound.play();}
 
       if (ladybug > enemy) {
         ladybug.yDelta++;
@@ -122,6 +124,9 @@ function checkPlayerCollision() {
 	  
 		player.x = 200; //back to starting position
 		player.y = 445;
+		
+		if (soundOn) {
+		playerCollisionSound.play(); }
 	  
     }//end of if ladybug > enemy
   }//end of for loop
@@ -175,7 +180,16 @@ for (i = 0; i < 5; i++) {
 // enemyOne.y = ((Math.floor(Math.random() * 196)) + 55); //351-55 = 296
 
 let player = new Player;
+let playerCollisionSound = new sound("sounds/zapsplat_cartoon_impact_strings.mp3");
+let bugCollisionSound = new sound("sounds/zapsplat_cartoon_punch.mp3");
+let myMusic = new sound("sounds/gametheme.mp3");
 
+let soundOn = true;
+
+if (soundOn) { 
+
+	myMusic.play();
+}
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -189,3 +203,22 @@ document.addEventListener("keydown", function(e) {
   };
   player.handleInput(allowedKeys[e.keyCode]);
 });
+
+//https://www.w3schools.com/graphics/game_sound.asp
+function sound(src) {
+    this.sound = document.createElement("audio");
+    this.sound.src = src;
+    this.sound.setAttribute("preload", "auto");
+    this.sound.setAttribute("controls", "none");
+    this.sound.style.display = "none";
+    document.body.appendChild(this.sound);
+    this.play = function(){
+        this.sound.play();
+    }
+    this.stop = function(){
+        this.sound.pause();
+    }
+} 
+
+//sounds from zapsplat
+//music from https://www.w3schools.com/graphics/gametheme.mp3
