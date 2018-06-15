@@ -1,8 +1,7 @@
 /*To Do:
-Something nice happens at end
-Player move diagonally
-Player move faster with shift
-Jewels for extra points
+Player moves diagonally
+Player moves faster with shift
+Jewels for extra lives
 */
 
 // canvas.width = 505;
@@ -70,10 +69,10 @@ function checkBugCollision(ladybug) {
     }
 
     if (
-      ladybug.y + 142 >= enemy.y + 78 && //131-90
-      ladybug.x + 2 <= enemy.x + 97 && //25 - 88
-      ladybug.y + 78 <= enemy.y + 142 && //73 - 135
-      ladybug.x + 97 >= enemy.x + 2) { //76 - 11
+      ladybug.y + 142 >= enemy.y + 78 &&
+      ladybug.x + 2 <= enemy.x + 97 &&
+      ladybug.y + 78 <= enemy.y + 142 &&
+      ladybug.x + 97 >= enemy.x + 2) {
 
       if (soundOn) {
         bugCollisionSound.play();
@@ -93,8 +92,7 @@ function checkBugCollision(ladybug) {
 
 } //end of checkBugCollision()
 
-
-// Gus: Can I do this Player class with shorthand?
+// Udacity reviewer: Can I do this Player class with shorthand? I failed
 
 const Player = function() {
   this.x = 200; //starting position
@@ -126,13 +124,20 @@ Player.prototype.update = function() {
 
 function checkPlayerCollision() {
 
+  if (player.y < -10) { //winning condition
+    displayWinModal();
+    Engine(init);//Dear Udacity reviewer, this does not work
+    return null;
+  }
+
+
   for (let enemy of allEnemies) {
 
     if (
-      player.y + 138 >= enemy.y + 78 && //131-90
-      player.x + 18 <= enemy.x + 78 && //25 - 88
-      player.y + 63 <= enemy.y + 142 && //73 - 135
-      player.x + 83 >= enemy.x + 2) { //76 - 11
+      player.y + 138 >= enemy.y + 78 &&
+      player.x + 18 <= enemy.x + 78 &&
+      player.y + 63 <= enemy.y + 142 &&
+      player.x + 83 >= enemy.x + 2) {
 
         if (soundOn) {
           playerCollisionSound.play();
@@ -302,7 +307,7 @@ function displayFailModal() {
   span = document.getElementsByClassName("close")[0];
   span.onclick = function() {
       toggleModal();}
-  Engine(init);
+  Engine(init); //Dear Udacity reviewer: how can I initialize the canvas?
 }//end of displayFailModal();
 
 function changeStarScore() {
