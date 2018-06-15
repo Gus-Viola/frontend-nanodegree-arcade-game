@@ -1,3 +1,31 @@
 body {
     text-align: center;
 }
+
+/*
+From my Udacity "Portfolio" project
+*/
+.social_icons {
+  display: flex;
+  /*if removed, icons are not displayed*/
+  margin: 0 auto;
+  /*if I want to center*/
+  width: fit-content;
+  /*if I want to center*/
+  -webkit-padding-start: 0px;
+  /* User agent stylesheet puts a value of 40px
+  forcing my icons off-center. This vendor extension,
+  although unknown by w3c validator, fixes this
+  issue.*/
+  font-size: 1.5rem;
+  text-shadow: 3px 3px 3px #aaa;
+  text-decoration: none;
+}
+
+.social_icons li {
+  list-style-type: none;
+  /*removes bullet points*/
+  float: left;
+  padding: 10px;
+  /*nice padding between social_icons*/
+}

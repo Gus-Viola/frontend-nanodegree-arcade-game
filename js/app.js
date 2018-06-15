@@ -2,6 +2,13 @@
 // canvas.width = 505;
 // canvas.height = 606;
 
+//Global Variables
+let player; //instantiation of Player objectr;
+let allEnemies; //future array of ladybugs;
+let playerCollisionSound, bugCollisionSound, myMusic; //sound variables
+let soundOn, musicOn; //sound controls
+
+
 const Enemy = function() {
   this.x = -100; //ladybugs are gentle creatures, they do not just pop up
   this.y = 55; //is randomized upon instatiation from 55 to 350
@@ -36,7 +43,7 @@ Enemy.prototype.update = function(dt) {
   // which will ensure the game runs at the same speed for
   // all computers.
   this.x += (this.speed * dt);
-  this.y = (this.y + (this.yDelta)/60); //bumps
+  this.y = (this.y + (this.yDelta) / 60); //bumps
 
 };
 
@@ -47,18 +54,20 @@ Enemy.prototype.render = function() {
 
 function checkBugCollision(ladybug) {
 
-  for (enemy of allEnemies) {
-    if (ladybug == enemy) { //no changing yDelta if self
+  for (let enemy of allEnemies) {
+    if (ladybug === enemy) { //no changing yDelta if self
       break;
     }
 
     if (
-      ladybug.y + 130 >= enemy.y + 90 &&  //131-90
-      ladybug.x + 25 <= enemy.x + 90 &&   //25 - 88
-      ladybug.y + 75 <= enemy.y + 135 && //73 - 135
-      ladybug.x + 75 >= enemy.x + 10) { //76 - 11
-	  
-	  if (soundOn) {	  bugCollisionSound.play();}
+      ladybug.y + 142 >= enemy.y + 78 && //131-90
+      ladybug.x + 2 <= enemy.x + 97 && //25 - 88
+      ladybug.y + 78 <= enemy.y + 142 && //73 - 135
+      ladybug.x + 97 >= enemy.x + 2) { //76 - 11
+
+      if (soundOn) {
+        bugCollisionSound.play();
+      }
 
       if (ladybug > enemy) {
         ladybug.yDelta++;
@@ -66,21 +75,16 @@ function checkBugCollision(ladybug) {
       } else {
         ladybug.yDelta--;
         enemy.yDelta++;
-      }//end of else
-    }//end of if ladybug > enemy
-  }//end of for loop
-  
+      } //end of else
+    } //end of if ladybug > enemy
+  } //end of for loop
+
   return null;
-  
-}//end of checkBugCollision()
+
+} //end of checkBugCollision()
 
 
-// Now write your own Player class
-// This class requires an update(), render() and
-// a handleInput() method.
-// Gus: Can I do this with shorthand?
-
-//let sprite; //attribute of Player class
+// Gus: Can I do this Player class with shorthand?
 
 const Player = function() {
   this.x = 200; //starting position
@@ -90,51 +94,52 @@ const Player = function() {
 
 
 Player.prototype.update = function() {
-  // console.log(this);
-  
   checkPlayerCollision();
-  
-    if (this.x > 420) { //barrier to the right
-    this.x = 420; 
-  }
-    if (this.x < -17) { //barrier to the left
-    this.x = -17; 
-  }
-  
-    if (this.y > 445) { //barrier down
-    this.y = 445; 
-  }
-    if (this.y < -11) { //barrier up
-    this.y = -11; 
-  }//end of ifs that check player within canvas
-  
-
+  checkPlayerOffCanvas(); //just to avoid function complexity
   return null;
 }; // end of Player update function
 
 function checkPlayerCollision() {
-	
-	  for (enemy of allEnemies) {
+
+  for (let enemy of allEnemies) {
 
     if (
-      player.y + 130 >= enemy.y + 90 &&  //131-90
-      player.x + 25 <= enemy.x + 90 &&   //25 - 88
-      player.y + 75 <= enemy.y + 135 && //73 - 135
-      player.x + 75 >= enemy.x + 10) { //76 - 11
-	  
-		player.x = 200; //back to starting position
-		player.y = 445;
-		
-		if (soundOn) {
-		playerCollisionSound.play(); }
-	  
-    }//end of if ladybug > enemy
-  }//end of for loop
-  
-  return null;
-	
-}//end of checkPlayerCollision()
+      player.y + 138 >= enemy.y + 78 && //131-90
+      player.x + 18 <= enemy.x + 78 && //25 - 88
+      player.y + 63 <= enemy.y + 142 && //73 - 135
+      player.x + 83 >= enemy.x + 2) { //76 - 11
 
+      player.x = 200; //back to starting position
+      player.y = 445;
+
+      if (soundOn) {
+        playerCollisionSound.play();
+      }
+
+    } //end of if ladybug > enemy
+  } //end of for loop
+
+  return null;
+
+} //end of checkPlayerCollision()
+
+checkPlayerOffCanvas = function() {
+
+  if (player.x > 420) { //barrier to the right
+    player.x = 420;
+  }
+  if (player.x < -17) { //barrier to the left
+    player.x = -17;
+  }
+
+  if (player.y > 445) { //barrier down
+    player.y = 445;
+  }
+  if (player.y < -11) { //barrier up
+    player.y = -11;
+  } //end of ifs that check player within canvas
+
+} //end of checkPlayerOffCanvas()
 
 Player.prototype.render = function() { //draws Player on screen
   // console.log(this.sprite);
@@ -167,7 +172,7 @@ Player.prototype.handleInput = function(direction) { //handles the key inputs fo
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the Player object in a variable called Player
-let allEnemies = [];
+allEnemies = [];
 
 for (i = 0; i < 5; i++) {
   let enemyOne = new Enemy;
@@ -179,17 +184,46 @@ for (i = 0; i < 5; i++) {
 // enemyOne.speed = ((Math.floor(Math.random() * 101)) + 100); //speed from 100 to 200
 // enemyOne.y = ((Math.floor(Math.random() * 196)) + 55); //351-55 = 296
 
-let player = new Player;
-let playerCollisionSound = new sound("sounds/zapsplat_cartoon_impact_strings.mp3");
-let bugCollisionSound = new sound("sounds/zapsplat_cartoon_punch.mp3");
-let myMusic = new sound("sounds/gametheme.mp3");
+player = new Player;
+playerCollisionSound = new Audio("sounds/zapsplat_cartoon_impact_strings.mp3");
+bugCollisionSound = new Audio("sounds/zapsplat_cartoon_punch.mp3");
+myMusic = new Audio("sounds/gametheme.mp3");
 
-let soundOn = true;
+soundOn = false;
+musicOn = false;
 
-if (soundOn) { 
+if (musicOn) {
+  // https://stackoverflow.com/questions/3273552/html5-audio-looping  //loops the mp3
+  myMusic.addEventListener('ended', function() {
+    this.currentTime = 0;
+    this.play();
+  }, false);
 
-	myMusic.play();
+  myMusic.play();
 }
+
+
+
+
+$(".volume").click(function() {//turns on-off the bumping sounds
+  if (soundOn) {
+    soundOn = false;
+  } else {
+    soundOn = true;
+  }
+  return null;
+});
+
+$(".music").click(function() {//turns on-off the music
+  if (musicOn) {
+    musicOn = false;
+    myMusic.pause();
+  } else {
+    musicOn = true;
+    myMusic.play();
+  }
+  return null;
+});
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -206,19 +240,19 @@ document.addEventListener("keydown", function(e) {
 
 //https://www.w3schools.com/graphics/game_sound.asp
 function sound(src) {
-    this.sound = document.createElement("audio");
-    this.sound.src = src;
-    this.sound.setAttribute("preload", "auto");
-    this.sound.setAttribute("controls", "none");
-    this.sound.style.display = "none";
-    document.body.appendChild(this.sound);
-    this.play = function(){
-        this.sound.play();
-    }
-    this.stop = function(){
-        this.sound.pause();
-    }
-} 
+  this.sound = document.createElement("audio");
+  this.sound.src = src;
+  this.sound.setAttribute("preload", "auto");
+  this.sound.setAttribute("controls", "none");
+  this.sound.style.display = "none";
+  document.body.appendChild(this.sound);
+  this.play = function() {
+    this.sound.play();
+  }
+  this.stop = function() {
+    this.sound.pause();
+  }
+}
 
 //sounds from zapsplat
 //music from https://www.w3schools.com/graphics/gametheme.mp3
