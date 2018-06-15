@@ -2,7 +2,6 @@
 Something nice happens at end
 Player move diagonally
 Player move faster with shift
-Player animate.css upon bug collision
 Jewels for extra points
 */
 
@@ -14,6 +13,10 @@ let player; //instantiation of Player objectr;
 let allEnemies; //future array of ladybugs;
 let playerCollisionSound, bugCollisionSound, myMusic; //sound variables
 let soundOn, musicOn; //sound controls
+let scoreStars = document.querySelectorAll(".fa-star");
+let modal = document.querySelector(".modal");
+let modalContent = document.getElementsByClassName("modal-content");
+let span = document.getElementsByClassName("close")[0];
 
 
 const Enemy = function() {
@@ -97,25 +100,26 @@ const Player = function() {
   this.x = 200; //starting position
   this.y = 445;
   this.sprite = "images/char-cat-girl.png";
+  this.lives = 3;
 };
 
 
 Player.prototype.update = function() {
   checkPlayerCollision();
 
-    if (this.x > 420) { //barrier to the right
-      this.x = 420;
-    }
-    if (this.x < -17) { //barrier to the left
-      this.x = -17;
-    }
+  if (this.x > 420) { //barrier to the right
+    this.x = 420;
+  }
+  if (this.x < -17) { //barrier to the left
+    this.x = -17;
+  }
 
-    if (this.y > 445) { //barrier down
-      this.y = 445;
-    }
-    if (this.y < -11) { //barrier up
-      this.y = -11;
-    } //end of ifs that check player within canvas
+  if (this.y > 445) { //barrier down
+    this.y = 445;
+  }
+  if (this.y < -11) { //barrier up
+    this.y = -11;
+  } //end of ifs that check player within canvas
 
   return null;
 }; // end of Player update function
@@ -130,14 +134,22 @@ function checkPlayerCollision() {
       player.y + 63 <= enemy.y + 142 && //73 - 135
       player.x + 83 >= enemy.x + 2) { //76 - 11
 
-      player.x = 200; //back to starting position
-      player.y = 445;
+        if (soundOn) {
+          playerCollisionSound.play();
+        }
 
-      if (soundOn) {
-        playerCollisionSound.play();
-      }
+        player.lives--;
+        changeStarScore();
 
-    } //end of if ladybug > enemy
+        if (player.lives === 0) {
+          displayFailModal();
+          return null;
+        } else {
+          player.x = 200; //back to starting position
+          player.y = 445;
+        } //end of if life-check
+
+    } //end of if player > enemy
   } //end of for loop
 
   return null;
@@ -207,18 +219,18 @@ if (musicOn) {
 }
 
 
-
-
-$(".volume").click(function() {//turns on-off the bumping sounds
+$(".volume").click(function() { //turns on-off the bumping sounds
   if (soundOn) {
     soundOn = false;
   } else {
     soundOn = true;
   }
+  $(".volume").animateCss("flipInX");
+  displayFailModal();
   return null;
 });
 
-$(".music").click(function() {//turns on-off the music
+$(".music").click(function() { //turns on-off the music
   if (musicOn) {
     musicOn = false;
     myMusic.pause();
@@ -226,6 +238,8 @@ $(".music").click(function() {//turns on-off the music
     musicOn = true;
     myMusic.play();
   }
+  $(".music").animateCss("flipInX");
+  displayWinModal();
   return null;
 });
 
@@ -241,6 +255,92 @@ document.addEventListener("keydown", function(e) {
   };
   player.handleInput(allowedKeys[e.keyCode]);
 });
+
+// When the user clicks on <span> (x), close the modal
+function toggleModal() {
+  $(modal).toggleClass("show-modal");
+}
+
+span.onclick = function() {
+  toggleModal();
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    toggleModal();
+  }
+}
+
+function displayWinModal() {
+  displayString = `You have succesfully entered the stream!`;
+  $(modalContent).html(`<span class="close">&times;</span>
+  <h1>Congratulations, you have won!</h1>
+    <ul>${displayString}</ul>
+    <ul><li><h1><i class="fa fa-trophy"></i></h1></li></ul>`);
+
+  $(modalContent).removeClass("failure").addClass("success");
+  $(modal).animateCss("bounceInUp");
+
+  $(modal).toggleClass("show-modal");
+  span = document.getElementsByClassName("close")[0];
+  span.onclick = function() {
+    toggleModal();
+  }
+  return null;
+} //end of displayWinModal()
+
+function displayFailModal() {
+  $(modalContent).html(`<span class="close">&times;</span>
+    <h1>Sorry, you died three times!</h1>
+    <ul><li>
+    <h1><i class="fa fa-bomb"></i></h1>
+    </li></ul>`);
+  $(modalContent).removeClass("success").addClass("failure");
+  $(modal).animateCss("bounceInUp");
+  $(modal).toggleClass("show-modal");
+  span = document.getElementsByClassName("close")[0];
+  span.onclick = function() {
+      toggleModal();}
+  Engine(init);
+}//end of displayFailModal();
+
+function changeStarScore() {
+    obj = scoreStars[player.lives];
+    $(obj).removeClass("checked");
+    $(obj).animateCss("flipInX");
+  return null;
+}//end of changeStarScore()
+
+
+// code from https://github.com/daneden/animate.css/#usage
+$.fn.extend({
+  animateCss: function(animationName, callback) {
+    var animationEnd = (function(el) {
+      var animations = {
+        animation: 'animationend',
+        OAnimation: 'oAnimationEnd',
+        MozAnimation: 'mozAnimationEnd',
+        WebkitAnimation: 'webkitAnimationEnd',
+      };
+
+      for (var t in animations) {
+        if (el.style[t] !== undefined) {
+          return animations[t];
+        }
+      }
+    })(document.createElement('div'));
+
+    this.addClass('animated ' + animationName).one(animationEnd, function() {
+      $(this).removeClass('animated ' + animationName);
+
+      if (typeof callback === 'function') callback();
+    });
+
+    return this;
+  },
+}); //end of jQuery extention for animation
+
 
 //this function may die
 //https://www.w3schools.com/graphics/game_sound.asp

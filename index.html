@@ -6,9 +6,20 @@
   <title>Effective JavaScript: Frogger</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet prefetch" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+  <link rel="stylesheet" href="css/animate.css">
 </head>
 
 <body>
+
+<div class="score-panel">
+
+  <ul class="stars">
+    <!-- https://www.w3schools.com/howto/howto_css_star_rating.asp -->
+    <li><i class="fa fa-star checked"></i></li>
+    <li><i class="fa fa-star checked"></i></li>
+    <li><i class="fa fa-star checked"></i></li>
+  </ul>
+
   <div class="social_icons">
 
     <div class="volume">
@@ -22,7 +33,27 @@
     </div>
 
   </div>
+</div>
 
+
+  <!-- https://www.w3schools.com/howto/howto_css_modals.asp -->
+  <!-- The Modal -->
+  <div id="myModal" class="modal" style="display: block;">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Default Text</h2>
+      <ul>
+        <li>
+          <h1>
+        <i class="fa fa-trophy"></i>
+      </h1>
+        </li>
+      </ul>
+    </div>
+
+  </div>
 
   <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous">
   </script>
