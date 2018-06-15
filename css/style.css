@@ -1,10 +1,11 @@
 body {
-    text-align: center;
+  text-align: center;
 }
 
 /*
 From my Udacity "Portfolio" project
 */
+
 .social_icons {
   display: flex;
   /*if removed, icons are not displayed*/
@@ -12,7 +13,8 @@ From my Udacity "Portfolio" project
   /*if I want to center*/
   width: fit-content;
   /*if I want to center*/
-  -webkit-padding-start: 0px;
+  -webkit-padding-start: 0;
+  -moz-padding-start: 0;
   /* User agent stylesheet puts a value of 40px
   forcing my icons off-center. This vendor extension,
   although unknown by w3c validator, fixes this

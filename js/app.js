@@ -1,4 +1,11 @@
-// Enemies our Player must avoid
+/*To Do:
+Something nice happens at end
+Player move diagonally
+Player move faster with shift
+Player animate.css upon bug collision
+Jewels for extra points
+*/
+
 // canvas.width = 505;
 // canvas.height = 606;
 
@@ -95,7 +102,21 @@ const Player = function() {
 
 Player.prototype.update = function() {
   checkPlayerCollision();
-  checkPlayerOffCanvas(); //just to avoid function complexity
+
+    if (this.x > 420) { //barrier to the right
+      this.x = 420;
+    }
+    if (this.x < -17) { //barrier to the left
+      this.x = -17;
+    }
+
+    if (this.y > 445) { //barrier down
+      this.y = 445;
+    }
+    if (this.y < -11) { //barrier up
+      this.y = -11;
+    } //end of ifs that check player within canvas
+
   return null;
 }; // end of Player update function
 
@@ -123,23 +144,6 @@ function checkPlayerCollision() {
 
 } //end of checkPlayerCollision()
 
-checkPlayerOffCanvas = function() {
-
-  if (player.x > 420) { //barrier to the right
-    player.x = 420;
-  }
-  if (player.x < -17) { //barrier to the left
-    player.x = -17;
-  }
-
-  if (player.y > 445) { //barrier down
-    player.y = 445;
-  }
-  if (player.y < -11) { //barrier up
-    player.y = -11;
-  } //end of ifs that check player within canvas
-
-} //end of checkPlayerOffCanvas()
 
 Player.prototype.render = function() { //draws Player on screen
   // console.log(this.sprite);
@@ -194,7 +198,7 @@ musicOn = false;
 
 if (musicOn) {
   // https://stackoverflow.com/questions/3273552/html5-audio-looping  //loops the mp3
-  myMusic.addEventListener('ended', function() {
+  myMusic.addEventListener("ended", function() {
     this.currentTime = 0;
     this.play();
   }, false);
@@ -238,21 +242,22 @@ document.addEventListener("keydown", function(e) {
   player.handleInput(allowedKeys[e.keyCode]);
 });
 
+//this function may die
 //https://www.w3schools.com/graphics/game_sound.asp
-function sound(src) {
-  this.sound = document.createElement("audio");
-  this.sound.src = src;
-  this.sound.setAttribute("preload", "auto");
-  this.sound.setAttribute("controls", "none");
-  this.sound.style.display = "none";
-  document.body.appendChild(this.sound);
-  this.play = function() {
-    this.sound.play();
-  }
-  this.stop = function() {
-    this.sound.pause();
-  }
-}
+// function sound(src) {
+//   this.sound = document.createElement("audio");
+//   this.sound.src = src;
+//   this.sound.setAttribute("preload", "auto");
+//   this.sound.setAttribute("controls", "none");
+//   this.sound.style.display = "none";
+//   document.body.appendChild(this.sound);
+//   this.play = function() {
+//     this.sound.play();
+//   }
+//   this.stop = function() {
+//     this.sound.pause();
+//   }
+// }
 
 //sounds from zapsplat
 //music from https://www.w3schools.com/graphics/gametheme.mp3
