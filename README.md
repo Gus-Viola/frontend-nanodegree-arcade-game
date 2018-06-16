@@ -1,15 +1,37 @@
-frontend-nanodegree-arcade-game
-===============================
+## Udacity's Arcade Game Project, by [Gus Viola](https://linkedin.com/in/gusviola/)
+=============================================
 
-Rubric:
-The game functions correctly and runs error free
+## Table of Contents
 
-Player can not move off screen
-Vehicles cross the screen
-Vehicle-player collisions happen logically (not too early or too late)
-Vehicle-player collision resets the game
-Something happens when player wins
+* [Introduction](#introduction)
+* [Installation](#Installation)
+* [Instructions](#instructions)
+* [Dependencies](#dependencies)
+* [License](#License)
 
-  Make sure the functions you write are **object-oriented** - either class functions (like Player and Enemy) or class prototype functions such as Enemy.prototype.checkCollisions, and that the keyword 'this' is used appropriately within your class and class prototype functions to refer to the object the function is called upon. Also be sure that the **readme.md** file is updated with your instructions on both how to 1. Run and 2. Play your arcade game.
+## Introduction
 
-For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
+This simple and fun game is a throwback to Atari's [Freeway](https://www.retrogames.cz/play_123-Atari2600.php) and Konami's [Frogger](https://www.classicgamesarcade.com/game/21607/frogger.html). Younger players will recognize the similarities to the recent Disney's [Crossy Road](https://g.co/kgs/S7oA3p).
+
+## Installation
+
+Just click on the <span style="color:green">green "Clone or download" button</span> above to the right, get all files and folders in your drive, and open index.html with your web browser of choice!
+
+If you are interested in programming, feel free to [clone](https://help.github.com/articles/cloning-a-repository/) and use the code! It is distributed under the [MIT License](https://choosealicense.com/licenses/mit/).
+
+## Instructions
+
+* Use the arrow keys to move your character to the four basic directions.
+* Ladybugs are pretty but you should avoid them.
+* Stars indicate how many lives you have.
+* You can turn on or off the music and sounds by pressing the proper icons.
+
+## Dependencies
+
+This game uses the [JQuery](https://www.w3schools.com/Jquery/default.asp) library and [Animate.css](https://daneden.github.io/animate.css/).
+
+## License
+
+The contents of this repository are covered under the [MIT License](https://choosealicense.com/licenses/mit/).
+
+According to [choosealicense](https://choosealicense.com/), "the MIT License is a permissive license that is short and to the point. It lets people do anything they want with your code as long as they provide attribution back to you and don’t hold you liable."
