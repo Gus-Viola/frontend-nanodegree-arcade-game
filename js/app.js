@@ -1,3 +1,4 @@
+"use strict"; //per Udacity reviewer suggestion - great tip, btw
 /*To Do:
 Player moves diagonally
 Player moves faster with shift
@@ -13,16 +14,16 @@ let allEnemies; //future array of ladybugs;
 let playerCollisionSound, bugCollisionSound, myMusic; //sound variables
 let soundOn, musicOn; //sound controls
 let scoreStars = document.querySelectorAll(".fa-star");
-let modal = document.querySelector(".modal");
-let modalContent = document.getElementsByClassName("modal-content");
+const modal = document.querySelector(".modal");
+const modalContent = document.getElementsByClassName("modal-content");
 let span = document.getElementsByClassName("close")[0];
 
 
-const Enemy = function() {
+const Enemy = function(y, speed) {
   this.x = -100; //ladybugs are gentle creatures, they do not just pop up
-  this.y = 55; //is randomized upon instatiation from 55 to 350
+  this.y = y; //is randomized upon instatiation from 55 to 350
   this.yDelta = 0;
-  this.speed = 100; //is randomized upon instatiation from 100 to 200
+  this.speed = speed; //is randomized upon instatiation from 100 to 200
   this.sprite = "images/enemy-bug.png";
 };
 
@@ -30,8 +31,8 @@ const Enemy = function() {
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
 
-  //function checkCollision checks ladybug vs enemies; nudges ensue
-  checkBugCollision(this);
+  //function checkBugCollision checks ladybug vs enemies; nudges ensue
+  this.checkBugCollision();
 
   if (this.y < 55) { //ladybugs must be between 55 and 350
     this.y = 55;
@@ -61,36 +62,36 @@ Enemy.prototype.render = function() {
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-function checkBugCollision(ladybug) {
+
+Enemy.prototype.checkBugCollision = function() {
 
   for (let enemy of allEnemies) {
-    if (ladybug === enemy) { //no changing yDelta if self
+    if (this === enemy) { //no changing yDelta if self
       break;
     }
-
     if (
-      ladybug.y + 142 >= enemy.y + 78 &&
-      ladybug.x + 2 <= enemy.x + 97 &&
-      ladybug.y + 78 <= enemy.y + 142 &&
-      ladybug.x + 97 >= enemy.x + 2) {
+      this.y + 142 >= enemy.y + 78 &&
+      this.x + 2 <= enemy.x + 97 &&
+      this.y + 78 <= enemy.y + 142 &&
+      this.x + 97 >= enemy.x + 2) {
 
       if (soundOn) {
         bugCollisionSound.play();
       }
 
-      if (ladybug > enemy) {
-        ladybug.yDelta++;
+      if (this > enemy) {
+        this.yDelta++;
         enemy.yDelta--;
       } else {
-        ladybug.yDelta--;
+        this.yDelta--;
         enemy.yDelta++;
       } //end of else
-    } //end of if ladybug > enemy
+    } //end of if this > enemy
   } //end of for loop
 
   return null;
 
-} //end of checkBugCollision()
+}; //end of checkBugCollision()
 
 // Udacity reviewer: Can I do this Player class with shorthand? I failed
 
@@ -103,7 +104,7 @@ const Player = function() {
 
 
 Player.prototype.update = function() {
-  checkPlayerCollision();
+  this.checkPlayerCollision();
 
   if (this.x > 420) { //barrier to the right
     this.x = 420;
@@ -122,11 +123,12 @@ Player.prototype.update = function() {
   return null;
 }; // end of Player update function
 
-function checkPlayerCollision() {
+Player.prototype.checkPlayerCollision = function() {
 
-  if (player.y < -10) { //winning condition
+  if (this.y < -10) { //winning condition
     displayWinModal();
-    Engine(init);//Dear Udacity reviewer, this does not work
+    this.x = 200; //back to starting position
+    this.y = 445;
     return null;
   }
 
@@ -134,36 +136,35 @@ function checkPlayerCollision() {
   for (let enemy of allEnemies) {
 
     if (
-      player.y + 138 >= enemy.y + 78 &&
-      player.x + 18 <= enemy.x + 78 &&
-      player.y + 63 <= enemy.y + 142 &&
-      player.x + 83 >= enemy.x + 2) {
+      this.y + 138 >= enemy.y + 78 &&
+      this.x + 18 <= enemy.x + 78 &&
+      this.y + 63 <= enemy.y + 142 &&
+      this.x + 83 >= enemy.x + 2) {
 
-        if (soundOn) {
-          playerCollisionSound.play();
-        }
+      if (soundOn) {
+        playerCollisionSound.play();
+      }
 
-        player.lives--;
-        changeStarScore();
+      this.lives--;
+      changeStarScore();
 
-        if (player.lives === 0) {
-          displayFailModal();
-          return null;
-        } else {
-          player.x = 200; //back to starting position
-          player.y = 445;
-        } //end of if life-check
+      if (this.lives === 0) {
+        displayFailModal();
+        return null;
+      } else {
+        this.x = 200; //back to starting position
+        this.y = 445;
+      } //end of if life-check
 
-    } //end of if player > enemy
+    } //end of if this > enemy
   } //end of for loop
 
   return null;
 
-} //end of checkPlayerCollision()
+}; //end of checkthisCollision()
 
 
 Player.prototype.render = function() { //draws Player on screen
-  // console.log(this.sprite);
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
@@ -195,15 +196,15 @@ Player.prototype.handleInput = function(direction) { //handles the key inputs fo
 // Place the Player object in a variable called Player
 allEnemies = [];
 
-for (i = 0; i < 5; i++) {
-  let enemyOne = new Enemy;
-  enemyOne.speed = ((Math.floor(Math.random() * 101)) + 100); //speed from 100 to 200
-  enemyOne.y = ((Math.floor(Math.random() * 296)) + 55); //351-55 = 296
-  allEnemies.push(enemyOne);
-}
-// let enemyOne = new Enemy;
-// enemyOne.speed = ((Math.floor(Math.random() * 101)) + 100); //speed from 100 to 200
-// enemyOne.y = ((Math.floor(Math.random() * 196)) + 55); //351-55 = 296
+for (let i = 0; i < 5; i++) {
+
+  let enemy = new Enemy(
+    ((Math.floor(Math.random() * 296)) + 55), //y parameter 351-55 = 296
+    ((Math.floor(Math.random() * 101)) + 100) //speed parameter from 100 to 200
+  );
+
+  allEnemies.push(enemy);
+} //end of for loop
 
 player = new Player;
 playerCollisionSound = new Audio("sounds/zapsplat_cartoon_impact_strings.mp3");
@@ -223,7 +224,6 @@ if (musicOn) {
   myMusic.play();
 }
 
-
 $(".volume").click(function() { //turns on-off the bumping sounds
   if (soundOn) {
     soundOn = false;
@@ -231,7 +231,6 @@ $(".volume").click(function() { //turns on-off the bumping sounds
     soundOn = true;
   }
   $(".volume").animateCss("flipInX");
-  displayFailModal();
   return null;
 });
 
@@ -244,7 +243,6 @@ $(".music").click(function() { //turns on-off the music
     myMusic.play();
   }
   $(".music").animateCss("flipInX");
-  displayWinModal();
   return null;
 });
 
@@ -278,7 +276,7 @@ window.onclick = function(event) {
 }
 
 function displayWinModal() {
-  displayString = `You have succesfully entered the stream!`;
+  const displayString = `You have succesfully entered the stream!`;
   $(modalContent).html(`<span class="close">&times;</span>
   <h1>Congratulations, you have won!</h1>
     <ul>${displayString}</ul>
@@ -304,18 +302,20 @@ function displayFailModal() {
   $(modalContent).removeClass("success").addClass("failure");
   $(modal).animateCss("bounceInUp");
   $(modal).toggleClass("show-modal");
-  span = document.getElementsByClassName("close")[0];
+  let span = document.getElementsByClassName("close")[0];
   span.onclick = function() {
-      toggleModal();}
-  Engine(init); //Dear Udacity reviewer: how can I initialize the canvas?
-}//end of displayFailModal();
+    toggleModal();
+  }
+  player.x = 200; //back to starting position
+  player.y = 445;
+} //end of displayFailModal();
 
 function changeStarScore() {
-    obj = scoreStars[player.lives];
-    $(obj).removeClass("checked");
-    $(obj).animateCss("flipInX");
+  let obj = scoreStars[player.lives];
+  $(obj).removeClass("checked");
+  $(obj).animateCss("flipInX");
   return null;
-}//end of changeStarScore()
+} //end of changeStarScore()
 
 
 // code from https://github.com/daneden/animate.css/#usage
@@ -346,23 +346,6 @@ $.fn.extend({
   },
 }); //end of jQuery extention for animation
 
-
-//this function may die
-//https://www.w3schools.com/graphics/game_sound.asp
-// function sound(src) {
-//   this.sound = document.createElement("audio");
-//   this.sound.src = src;
-//   this.sound.setAttribute("preload", "auto");
-//   this.sound.setAttribute("controls", "none");
-//   this.sound.style.display = "none";
-//   document.body.appendChild(this.sound);
-//   this.play = function() {
-//     this.sound.play();
-//   }
-//   this.stop = function() {
-//     this.sound.pause();
-//   }
-// }
 
 //sounds from zapsplat
 //music from https://www.w3schools.com/graphics/gametheme.mp3
